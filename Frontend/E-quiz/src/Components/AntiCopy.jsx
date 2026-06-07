@@ -38,14 +38,14 @@ const AntiCopy = ({ onTriggerSubmit, submitted = false }) => {
   }, [submitted])
 
   return (
-    <div>
-      <p>This content cannot be copied.</p>
+    <div className="warning-block">
+      <p>This content cannot be copied during the quiz.</p>
       {attemptCount > 0 && (
-        <div style={{ color: attemptCount >= 2 ? 'darkred' : 'orange', marginTop: 6 }}>
+        <div className={attemptCount >= 2 ? 'warning-status' : 'warning-info'}>
           Copy attempts: {attemptCount}
         </div>
       )}
-      {warned && <small style={{ color: 'red' }}>Copying is prohibited — further attempts will submit the quiz.</small>}
+      {warned && <small>Copying is prohibited — further attempts will submit the quiz.</small>}
     </div>
   )
 }

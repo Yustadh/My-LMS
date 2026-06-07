@@ -1,19 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Time = () => {
-    const [time, setTime] = useState(new Date().toLocaleTimeString())
-    
+  const [time, setTime] = useState(new Date().toLocaleTimeString())
 
-    const updateTime = () => {
-        const currentTime = new Date().toLocaleTimeString()
-        setTime(currentTime)
-    }
-    setInterval(updateTime, 1000)
-  return (
-    <div>
-        {time}
-    </div>
-  )
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(new Date().toLocaleTimeString())
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [])
+
+  return <p className="current-time">Current time: {time}</p>
 }
 
 export default Time

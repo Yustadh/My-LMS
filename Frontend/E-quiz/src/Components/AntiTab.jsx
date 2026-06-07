@@ -52,9 +52,13 @@ const AntiTab = ({ onTriggerSubmit, submitted = false }) => {
   }, [submitted])
 
   return (
-    <div>
-      {warned && <small style={{ color: 'red' }}>Warning shown: do not navigate away — another attempt will submit.</small>}
-      {attemptCount > 0 && <div style={{ color: attemptCount >= 2 ? 'darkred' : 'orange' }}>Tab-leave attempts: {attemptCount}</div>}
+    <div className="warning-block">
+      {warned && <small>Warning shown: do not navigate away — another attempt will submit.</small>}
+      {attemptCount > 0 && (
+        <div className={attemptCount >= 2 ? 'warning-status' : 'warning-info'}>
+          Tab-leave attempts: {attemptCount}
+        </div>
+      )}
     </div>
   )
 }

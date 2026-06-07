@@ -1,59 +1,70 @@
-import React, {useState, useEffect} from 'react'
-import axios from 'axios'
+﻿import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import './Login.css'
-
-
+import api from '../api'
 
 const Signup = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
-    
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
   const navigate = useNavigate()
 
   async function handleSubmit(e) {
     e.preventDefault()
-    // Handle login logic here
     try {
-      const response = await axios.post('/api/quiz/signup', { email, password })
-      console.log('Signup successful:', response.data)
+      const response = await api.post('/register', { name, email, password })
+      if (response?.data?.token) {
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('user', JSON.stringify(response.data.user))
+        navigate('/ready')
+        return
+      }
     } catch (error) {
-      console.error('Signup failed:', error.response ? error.response.data : error.message)
+      setError(error.response?.data?.error || 'Signup failed')
     }
-    navigate('/dashboard') // Example navigation after signup
   }
 
   return (
-    <div className="login">
-        <h1>Signup</h1>
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="email">Email:</label>
-                <input 
-                    id="email" 
-                    name="email" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                    required 
-                />
-            </div>
-            <div>
-                <label htmlFor="password">Password:</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    required 
-                />
-            </div>
-            <p>OR</p>
-            <br />
-                <Link to="/register">Don't have an account? Register here</Link>
-            <button type="submit">Login</button>
+    <div className="page-shell auth-shell">
+      <div className="auth-card">
+        <h2>Sign Up</h2>
+        <p>Create an account to start the quiz.</p>
+        {error && <div className="error-box">{error}</div>}
+        <form onSubmit={handleSubmit} className="auth-form">
+          <label htmlFor="name">Name</label>
+          <input
+            id="name"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Optional"
+          />
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button className="button button-primary" type="submit">
+            Create Account
+          </button>
         </form>
+        <p className="form-note">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+      </div>
     </div>
   )
 }

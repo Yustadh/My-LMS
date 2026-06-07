@@ -1,6 +1,5 @@
 import express from 'express';
-import { login } from '../../Controllers/Quiz/login.js';
-
+import { login } from '../../Controller/login.js';
 
 const router = express.Router();
 

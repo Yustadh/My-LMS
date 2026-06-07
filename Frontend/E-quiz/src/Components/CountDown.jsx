@@ -10,7 +10,6 @@ const CountDown = ({ hours = 0, minutes = 0, seconds = 0, onComplete, active = t
 
   useEffect(() => {
     if (!active) return
-
     if (totalSeconds <= 0) {
       setRemainingSeconds(0)
       if (onComplete) onComplete()
@@ -36,9 +35,9 @@ const CountDown = ({ hours = 0, minutes = 0, seconds = 0, onComplete, active = t
   const displaySeconds = String(remainingSeconds % 60).padStart(2, '0')
 
   return (
-    <div>
-      <strong>Countdown:</strong> {displayHours} hrs {displayMinutes} mins {displaySeconds} secs
-    </div>
+    <h1 className="countdown-timer">
+      {displayHours}:{displayMinutes}:{displaySeconds}
+    </h1>
   )
 }
 

@@ -5,17 +5,17 @@ const Submit = ({ questions, answers = {}, submitted = false, score = 0, onSubmi
   const allAnswered = answeredCount === total
 
   return (
-    <div style={{ marginTop: '16px' }}>
-      <button onClick={onSubmit} disabled={submitted || !allAnswered} aria-disabled={submitted || !allAnswered}>
+    <div className="submit-block">
+      <button className="button button-primary" onClick={onSubmit} disabled={submitted || !allAnswered} aria-disabled={submitted || !allAnswered}>
         {submitted ? 'Quiz Submitted' : 'Submit Quiz'}
       </button>
 
-      <div style={{ marginTop: '8px' }}>
+      <div>
         <strong>Answered:</strong> {answeredCount} / {total}
       </div>
 
       {submitted && (
-        <div style={{ marginTop: '8px' }}>
+        <div>
           <strong>Score:</strong> {score} / {total}
         </div>
       )}

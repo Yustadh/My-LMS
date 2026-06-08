@@ -1,3 +1,4 @@
+import path from 'path'
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -22,6 +23,19 @@ app.use('/api/quiz', registerRoute)
 app.use('/api/quiz', quizRoute)
 
 await initDb()
+
+//for production, serve the React app from the build folder
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(process.cwd(), 'Frontend', 'E-quiz', 'build')))
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'Frontend', 'E-quiz', 'build', 'index.html'))
+  })
+}else {
+  app.get('/', (req, res) => {
+    res.send('Running in development mode')
+  })
+  console.log('Running in development mode')
+}
 
 const PORT = process.env.PORT || 8000
 app.listen(PORT, () => {

@@ -14,23 +14,19 @@ app.use(express.json())
 app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/', (req, res) => {
-  res.send('Quiz backend running')
-})
-
 app.use('/api/quiz', loginRoute)
 app.use('/api/quiz', registerRoute)
 app.use('/api/quiz', quizRoute)
 
 await initDb()
 
-//for production, serve the React app from the build folder
+// for production, serve the React app from the built dist folder
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(process.cwd(), 'Frontend', 'E-quiz', 'build')))
+  app.use(express.static(path.join(process.cwd(), 'Frontend', 'E-quiz', 'dist')))
   app.get('*', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'Frontend', 'E-quiz', 'build', 'index.html'))
+    res.sendFile(path.join(process.cwd(), 'Frontend', 'E-quiz', 'dist', 'index.html'))
   })
-}else {
+} else {
   app.get('/', (req, res) => {
     res.send('Running in development mode')
   })

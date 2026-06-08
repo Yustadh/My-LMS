@@ -90,7 +90,7 @@ const QuizPage = () => {
     <div className="page-shell quiz-shell">
       <div className="quiz-header">
         <Time />
-        <CountDown hours={0} minutes={5} seconds={0} onComplete={handleSubmit} active={!submitted} />
+        <CountDown hours={0} minutes={10} seconds={0} onComplete={handleSubmit} active={!submitted} />
       </div>
 
       <div className="quiz-panel">

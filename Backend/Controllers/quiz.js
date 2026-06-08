@@ -30,7 +30,10 @@ export const startQuiz = async (req, res) => {
 }
 
 export const getQuestions = async (req, res) => {
-  const questionsResult = await pool.query('SELECT id, question, options, answer FROM questions')
+  const questionsResult = await pool.query(
+    'SELECT id, question, options, answer FROM questions ORDER BY RANDOM() LIMIT 20',
+  )
+
   const questions = questionsResult.rows.map((q) => ({
     id: q.id,
     question: q.question,
@@ -38,7 +41,7 @@ export const getQuestions = async (req, res) => {
     options: shuffle(q.options),
   }))
 
-  return res.json({ questions: shuffle(questions) })
+  return res.json({ questions })
 }
 
 export const submitQuiz = async (req, res) => {
@@ -50,19 +53,25 @@ export const submitQuiz = async (req, res) => {
     return res.status(400).json({ error: 'Quiz answers are required' })
   }
 
-  const questionsResult = await pool.query('SELECT id, answer FROM questions')
+  const questionIds = Object.keys(answers).map((id) => Number(id))
+  const questionsResult = await pool.query(
+    'SELECT id, answer FROM questions WHERE id = ANY($1)',
+    [questionIds],
+  )
+
   const score = questionsResult.rows.reduce((currentScore, question) => {
     const selected = answers[question.id]
     return selected === question.answer ? currentScore + 1 : currentScore
   }, 0)
 
-  // Save the quiz result to the database
+  const total = questionIds.length
+
   await pool.query(
     'INSERT INTO quiz_results (user_id, score, total) VALUES ($1, $2, $3)',
-    [userId, score, questionsResult.rowCount],
+    [userId, score, total],
   )
 
-  return res.json({ score, total: questionsResult.rowCount })
+  return res.json({ score, total })
 }
 
 export const getQuizHistory = async (req, res) => {

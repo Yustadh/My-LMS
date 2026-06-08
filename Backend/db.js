@@ -8,33 +8,6 @@ const connectionString = process.env.DATABASE_URL || `postgres://${process.env.P
 export const pool = new Pool({
   connectionString,
 })
-const sampleQuestions = [
-  {
-    question: 'What is the capital of France?',
-    options: ['Paris', 'London', 'Rome', 'Berlin'],
-    answer: 'Paris',
-  },
-  {
-    question: 'What is the capital of Germany?',
-    options: ['Amsterdam', 'Berlin', 'Madrid', 'Vienna'],
-    answer: 'Berlin',
-  },
-  {
-    question: 'What is the capital of Spain?',
-    options: ['Lisbon', 'Paris', 'Madrid', 'Rome'],
-    answer: 'Madrid',
-  },
-  {
-    question: 'Which language is used for backend development?',
-    options: ['HTML', 'CSS', 'JavaScript', 'Photoshop'],
-    answer: 'JavaScript',
-  },
-  {
-    question: 'Which company developed React?',
-    options: ['Google', 'Amazon', 'Facebook', 'Microsoft'],
-    answer: 'Facebook',
-  },
-]
 
 export const initDb = async () => {
   await pool.query(`
@@ -69,14 +42,5 @@ export const initDb = async () => {
     )
   `)
 
-  const existingQuestions = await pool.query('SELECT id FROM questions LIMIT 1')
-  if (existingQuestions.rowCount === 0) {
-    for (const question of sampleQuestions) {
-      await pool.query(
-        'INSERT INTO questions (question, options, answer) VALUES ($1, $2, $3)',
-        [question.question, JSON.stringify(question.options), question.answer],
-      )
-    }
-    console.log('Seeded sample questions into Postgres.')
-  }
+  console.log('Database tables initialized.')
 }
